@@ -2,8 +2,15 @@ module Main where
 
 import System.IO
 import Data.List.Split
-import HTMLLaTeXParser
-import HTMLLaTeXCompiler
+-- Frontend
+import LexicalAnalyzer
+import Parser
+import ICG
+-- Backend
+import CodeGenerator
+
+-- import HTMLLaTeXParser
+-- import HTMLLaTeXCompiler
 
 main :: IO ()
 main = do
