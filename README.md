@@ -5,16 +5,16 @@
 This is a source-to-source compiler that takes HTML and compiles it to LaTeX. The frontend and backend are written in Haskell.
 
 ## How to run
-
+```
 Linux: `./Main <filename>`
 Windows: `Main.exe <filename>`
-
+```
 ### What you should see:
-
+```
 > $ ./Main testOne.html
 > Compiling testOne.html...
 > Syntax: well-formed
-
+```
 ## How it works
 
 A compiler is typically split into a frontend and a backend. The frontend parses the source file into lexemes, which are then submitted to syntactic and semantic analysis. Syntactic and semantic analyses are handled by the syntactic and semantic analysers, or, in this case, the parser. This process creates a intermediate representation of the source, which is processed by the backend creating the target translation. (Optimisations are handled in the backend also, though this compiler does not make any optimisations.)
@@ -24,15 +24,15 @@ HTML is (at least) a context free language due to the fact that opening and clos
 ## TODO
 ### HTML Tags
 
-- <div>
-- <span>
-- <strong>
-- <sub>
-- <sup>
-- <meta>
-- <title>
-- <img>
-- <a>
+- \<div\>
+- \<span\>
+- \<strong\>
+- \<sub\>
+- \<sup\>
+- \<meta\>
+- \<title\>
+- \<img\>
+- \<a\>
 - quotations
 
 ## Bibliography
