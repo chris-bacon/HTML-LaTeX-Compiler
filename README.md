@@ -14,6 +14,7 @@ Windows: `Main.exe <filename.html>`
 > $ ./Main testOne.html
 > Compiling tests/testOne.html...
 > Syntax: well-formed
+> LaTeX successfully compiled
 ```
 ## How it works
 
