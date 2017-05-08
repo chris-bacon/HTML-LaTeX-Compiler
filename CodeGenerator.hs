@@ -1,8 +1,5 @@
 module CodeGenerator where
 
--- lstToString :: [String] -> String
--- lstToString =
-
 functionCall :: [(String, String)] -> String -> String
 functionCall [] output = output
 functionCall intRep output
