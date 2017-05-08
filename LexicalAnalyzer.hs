@@ -19,6 +19,7 @@ lexAnalyzer (x:xs) buffer output
     -- Word that precedes a tag with no delimiting whitespace
     | (isLetterDigit buffer) && (x == "<") = lexAnalyzer xs "<" (output ++ [("Word", buffer)])
 
+    | x == "" = lexAnalyzer xs "" output
     | x == "<" = lexAnalyzer xs "<" output
     | buffer ++ x == "</" = lexAnalyzer xs "</" output
 
@@ -115,13 +116,13 @@ lexAnalyzer (x:xs) buffer output
     | buffer ++ x == "<ht" = lexAnalyzer xs "<ht" output
     | buffer ++ x == "<htm" = lexAnalyzer xs "<htm" output
     | buffer ++ x == "<html" = lexAnalyzer xs "<html" output
-    | buffer ++ x == "<html>" = lexAnalyzer xs "" (output ++ [("sTag", "document")])
+    | buffer ++ x == "<html>" = lexAnalyzer xs "" (output ++ [("sTag", "startDocument")])
 
     | buffer ++ x == "</h" = lexAnalyzer xs "</h" output
     | buffer ++ x == "</ht" = lexAnalyzer xs "</ht" output
     | buffer ++ x == "</htm" = lexAnalyzer xs "</htm" output
     | buffer ++ x == "</html" = lexAnalyzer xs "</html" output
-    | buffer ++ x == "</html>" = lexAnalyzer xs "" (output ++ [("eTag", "document")])
+    | buffer ++ x == "</html>" = lexAnalyzer xs "" (output ++ [("eTag", "endDocument")])
 
     -- Operators
     | x == ">" = lexAnalyzer xs "" (output ++ [("Op", ">")])
@@ -137,7 +138,6 @@ lexAnalyzer (x:xs) buffer output
     | buffer ++ x == buffer ++ "," = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ",")])
     | buffer ++ x == buffer ++ ";" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ";")])
     | isLetterDigit (buffer ++ x) = lexAnalyzer xs (buffer ++ x) output
-
     -- x
     | otherwise = lexAnalyzer xs "" (output ++ [("Unkown", x)])
     -- | otherwise = error("some error")
