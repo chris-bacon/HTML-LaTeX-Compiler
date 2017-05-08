@@ -1,13 +1,9 @@
 module Parser where
 
--- Syntactic and Semantics analysis
-
 -- This is a recursive descent parser, where each context-free production rule is represented by a function
 -- This can also be considered a formal definition of HTML, as accepted by this compiler.
-
--- CFG for HTML
--- tag -> tagStart X tagEnd
--- X -> a|..|z|1|..|9|tag|X
+-- The parser is where syntacic and semantic analysis is usually carried out, but this parse, for the moment,
+-- only handles syntactic analysis. 
 
 -- lookahead is the next lexeme
 parse :: [String] -> [String]
@@ -28,7 +24,7 @@ parse lexemes
 -- or three child nodes (an sTag, another nonterminal node, and an eTag)
 tag lexemes = match "eTag" (parse (match "sTag" lexemes))
 
--- If a match is successful "execute" the terminal
+-- If a match is successful "execute" the terminal by moving on to the next lexeme
 match :: String -> [String] -> [String]
 match lookahead [] = error("Syntax Error... Possibily missing tag")
 match lookahead lexemes
