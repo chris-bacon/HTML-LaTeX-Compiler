@@ -6,8 +6,8 @@ This is a source-to-source compiler that takes HTML and compiles it to LaTeX. Th
 
 ## How to run
 ```
-Linux: `./Main <filename>`
-Windows: `Main.exe <filename>`
+Linux: `./Main <filename.html>`
+Windows: `Main.exe <filename.html>`
 ```
 ### What you should see:
 ```
@@ -24,7 +24,6 @@ HTML is (at least) a context free language due to the fact that opening and clos
 ## TODO
 ### HTML Tags
 
-- \<html\>
 - \<div\>
 - \<span\>
 - \<strong\>
@@ -38,5 +37,5 @@ HTML is (at least) a context free language due to the fact that opening and clos
 
 ## Bibliography
 
-- Aho, A _et al_,. 2007, _Compilers: principles, techniques, and tool_ (second ed). Pearson.
+- Aho, A _et al_,. 2007, _Compilers: principles, techniques, and tools_ (second ed). Pearson.
 - Sipser, M., 2005, _Introduction to the theory of computation_ (third ed), Cengage.
