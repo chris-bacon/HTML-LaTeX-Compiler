@@ -68,10 +68,10 @@ lexAnalyzer (x:xs) buffer output
 
     -- paragraph
     | buffer ++ x == "<p" = lexAnalyzer xs "<p" output
-    | buffer ++ x == "<p>" = lexAnalyzer xs "" (output ++ [("sTag", "para")])
+    | buffer ++ x == "<p>" = lexAnalyzer xs "" (output ++ [("sTag", "p")])
 
     | buffer ++ x == "</p" = lexAnalyzer xs "</p" output
-    | buffer ++ x == "</p>" = lexAnalyzer xs "" (output ++ [("eTag", "para")])
+    | buffer ++ x == "</p>" = lexAnalyzer xs "" (output ++ [("eTag", "p")])
 
     -- body
     | buffer ++ x == "<b" = lexAnalyzer xs "<b" output
@@ -115,13 +115,13 @@ lexAnalyzer (x:xs) buffer output
     | buffer ++ x == "<ht" = lexAnalyzer xs "<ht" output
     | buffer ++ x == "<htm" = lexAnalyzer xs "<htm" output
     | buffer ++ x == "<html" = lexAnalyzer xs "<html" output
-    | buffer ++ x == "<html>" = lexAnalyzer xs "" output
+    | buffer ++ x == "<html>" = lexAnalyzer xs "" (output ++ [("sTag", "document")])
 
     | buffer ++ x == "</h" = lexAnalyzer xs "</h" output
     | buffer ++ x == "</ht" = lexAnalyzer xs "</ht" output
     | buffer ++ x == "</htm" = lexAnalyzer xs "</htm" output
     | buffer ++ x == "</html" = lexAnalyzer xs "</html" output
-    | buffer ++ x == "</html>" = lexAnalyzer xs "" output
+    | buffer ++ x == "</html>" = lexAnalyzer xs "" (output ++ [("eTag", "document")])
 
     -- Operators
     | x == ">" = lexAnalyzer xs "" (output ++ [("Op", ">")])
@@ -140,3 +140,4 @@ lexAnalyzer (x:xs) buffer output
 
     -- x
     | otherwise = lexAnalyzer xs "" (output ++ [("Unkown", x)])
+    -- | otherwise = error("some error")

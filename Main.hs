@@ -1,23 +1,39 @@
 module Main where
 
 import System.IO
+import System.Environment
 import Data.List.Split
 -- Frontend
 import LexicalAnalyzer
 import Parser
-import ICG
 -- Backend
-import CodeGenerator
-
--- import HTMLLaTeXParser
--- import HTMLLaTeXCompiler
+-- import CodeGenerator
 
 main :: IO ()
 main = do
-    file <- readFile "HTML/example.html"
-    let stringList = splitOn "" file
-    let result = construct stringList "" ""
-    let result1 = addBeginningAndEnding result
-    print result1
-    writeFile "example.tex" result1
+    (x:xs) <- getArgs
+    file <- readFile x
+    let inputStream = splitOn "" file
+    putStr "Compiling "
+    putStr x
+    putStrLn "..."
+    let tokens = lexAnalyzer inputStream [] []
+
+    let lexemes = map fst tokens
+        attributes = map snd tokens
+        errors = parse lexemes
+
+    print lexemes
+    print attributes
+
+    if length errors == 0 then
+        putStrLn "Syntax: well-formed"
+    else
+        error("Syntax error found...")
+
+    -- codeGenerator tokens
+
+    -- let result1 = addBeginningAndEnding result
+
+    -- writeFile "LaTeX/example2.tex" ?tokens?
     return ()
