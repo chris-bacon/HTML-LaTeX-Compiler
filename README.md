@@ -22,7 +22,6 @@ A compiler is typically split into a frontend and a backend. The frontend parses
 HTML is (at least) a context free language due to the fact that opening and closing tags have dependencies between them (and so some form of _unbounded_ memory is required). Therefore, any grammar describing HTML needs to capture these dependencies, and dependencies are not capturable by a regular grammar, meaning that HTML needs at least a context-free grammar to describe it. The parser handles these dependencies, assessing whether the source is syntactically well-formed HTML.
 
 ## TODO
-### HTML Tags
 
 - \<div\>
 - \<span\>
@@ -34,6 +33,8 @@ HTML is (at least) a context free language due to the fact that opening and clos
 - \<img\>
 - \<a\>
 - quotations
+- Add spaces and newlines back into code generator
+- Comments
 
 ## Bibliography
 
