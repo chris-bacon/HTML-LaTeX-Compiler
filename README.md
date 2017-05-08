@@ -16,6 +16,7 @@ Windows: `Main.exe <filename.html>`
 > Syntax: well-formed
 > LaTeX successfully compiled
 ```
+Alternatively, if there is a syntax error, then the compiler will throw it out. 
 ## How it works
 
 A compiler is typically split into a frontend and a backend. The frontend parses the source file into lexemes, which are then submitted to syntactic and semantic analysis. Syntactic and semantic analyses are handled by the syntactic and semantic analysers, or, in this case, the parser. This process creates a intermediate representation of the source, which is processed by the backend creating the target translation. (Optimisations are handled in the backend also, though this compiler does not make any optimisations.)
