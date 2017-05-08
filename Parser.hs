@@ -30,7 +30,7 @@ tag lexemes = match "eTag" (parse (match "sTag" lexemes))
 
 -- If a match is successful "execute" the terminal
 match :: String -> [String] -> [String]
-match lookahead [] = error("Syntax Error... Possibily missing bracket")
+match lookahead [] = error("Syntax Error... Possibily missing tag")
 match lookahead lexemes
     | lookahead == terminal = nextTerminal
     | otherwise = error("Syntax Error... Mismatch: (1) "++ lookahead ++ " (2) " ++ terminal)
