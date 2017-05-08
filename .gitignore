@@ -1,3 +1,5 @@
 *.hi
 *.o
 .git
+*.cabal
+Setup.hs
