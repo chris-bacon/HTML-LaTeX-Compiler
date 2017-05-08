@@ -1,17 +1,25 @@
 # HTML-LaTeX Compiler
 
-**Work in progress**
+**Work in progress. This is my first compiler and first multi-file Haskell project.**
 
-**This is my first attempt at writing a compiler, so is most definitely very bad and rubbish.**
-
-This is a source-to-source compiler that takes HTML as the source language and compiles it into LaTeX. At the moment this compiler only works for a subset of HTML. The HTML must also be well-formed. That is, it must not contain malformed tags, as the grammar does not target such tags. For example, *< b>* will not be compiled as the LaTeX equivalent of the bold tag but will instead be compiled as the literal string "< b>". It would be possible to write a grammar that compiles *at least some* malformed HTML, but for now this compiler deals solely with valid HTML.
+This is a source-to-source compiler that takes HTML and compiles it to LaTeX. The frontend and backend are written in Haskell.
 
 ## How to run
 
-The program is written in Haskell, which is compiled to an executable. To run, simply run this executable.
+Linux: `./Main <filename>`
+Windows: `Main.exe <filename>`
 
-Linux: `./Main`
-Windows: `Main.exe`
+### What you should see:
+
+> $ ./Main testOne.html
+> Compiling testOne.html...
+> Syntax: well-formed
+
+## How it works
+
+A compiler is typically split into a frontend and a backend. The frontend parses the source file into lexemes, which are then submitted to syntactic and semantic analysis. Syntactic and semantic analyses are handled by the syntactic and semantic analysers, or, in this case, the parser. This process creates a intermediate representation of the source, which is processed by the backend creating the target translation. (Optimisations are handled in the backend also, though this compiler does not make any optimisations.)
+
+HTML is (at least) a context free language due to the fact that opening and closing tags have dependencies between them (and so some form of memory is required). Therefore, any grammar describing HTML needs to capture these dependencies, and dependencies are not capturable by a regular grammar, meaning that HTML needs at least a CFG to describe it. The parser handles these dependencies, assessing whether the source is syntactically well-formed HTML.
 
 ## TODO
 ### HTML Tags
@@ -23,5 +31,11 @@ Windows: `Main.exe`
 - <sup>
 - <meta>
 - <title>
+- <img>
+- <a>
 - quotations
-- mathematical equations/expressions
+
+## Bibliography
+
+- Aho, A _et al_,. 2007, _Compilers: principles, techniques, and tool_ (second ed). Pearson.
+- Sipser, M., 2005, _Introduction to the theory of computation_ (third ed), Cengage.
