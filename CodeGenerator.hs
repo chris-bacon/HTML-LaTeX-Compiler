@@ -20,12 +20,15 @@ generateLaTeX intRep output
     | token == "eTag" && attribute == "endDocument" = generateLaTeX (tail intRep) (output ++ "\\end{document}")
 
     -- non-tags
+    -- if two words in a sequence, we want whitespace
+    | token == "Word" && lookahead == "Word" = generateLaTeX (tail intRep) (output ++ attribute ++ " ")
     | token == "Word" = generateLaTeX (tail intRep) (output ++ attribute)
     | token == "Lit" = generateLaTeX (tail intRep) (output ++ attribute)
-    | token == "Op" = generateLaTeX (tail intRep) (output ++ attribute)
+    | token == "Op" = generateLaTeX (tail intRep) (output ++ " " ++ attribute)
     -- We may not want to convert every token into a LaTeX representation
     -- And we are assuming that all errors have already been caught by now
     | otherwise = generateLaTeX (tail intRep) output
     where
         token = fst $ head intRep
+        lookahead = fst $ head $ tail intRep
         attribute = snd $ head intRep

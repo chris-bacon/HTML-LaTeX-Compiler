@@ -8,9 +8,14 @@ import Text.Regex.Posix
 -- Here we are attempting to simulate a deterministic finite automaton.
 
 type Tokens = ([Char], [Char])
+
 --[[:space:]] = whitespace
 isLetterDigit :: String -> Bool
 isLetterDigit char = char =~ "([a-zA-Z0-9])+" :: Bool
+
+bufferClear :: String -> Bool
+bufferClear "" = True
+bufferClear _ = False
 
 -- Parse input into lexemes
 lexAnalyzer :: [[Char]] -> [Char] -> [Tokens] -> [Tokens]
@@ -127,10 +132,17 @@ lexAnalyzer (x:xs) buffer output
     -- Operators
     | x == ">" = lexAnalyzer xs "" (output ++ [("Op", ">")])
     | x == "=" = lexAnalyzer xs "" (output ++ [("Op", "=")])
+    | x == "+" = lexAnalyzer xs "" (output ++ [("Op", "+")])
+    | x == "-" = lexAnalyzer xs "" (output ++ [("Op", "-")])
+    | x == "*" = lexAnalyzer xs "" (output ++ [("Op", "*")])
+    | x == "/" = lexAnalyzer xs "" (output ++ [("Op", "/")])
     | buffer ++ x == "<=" = lexAnalyzer xs "" (output ++ [("Op", "<=")])
     | buffer ++ x == "<>" = lexAnalyzer xs "" (output ++ [("Op", "<>")])
     | buffer ++ x == "=>" = lexAnalyzer xs "" (output ++ [("Op", "=>")])
 
+    | x == "(" = lexAnalyzer xs "" (output ++ [("Lit", "(")])
+    | x == ")" && bufferClear buffer = lexAnalyzer xs "" (output ++ [("Lit", ")")])
+    | x == ")" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ")")])
     -- Alphanumeric
     | buffer ++ x == buffer ++ " " = lexAnalyzer xs "" (output ++ [("Word", buffer)])
     | buffer ++ x == buffer ++ "!" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", "!")])
@@ -139,5 +151,5 @@ lexAnalyzer (x:xs) buffer output
     | buffer ++ x == buffer ++ ";" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ";")])
     | isLetterDigit (buffer ++ x) = lexAnalyzer xs (buffer ++ x) output
     -- x
-    | otherwise = lexAnalyzer xs "" (output ++ [("Unkown", x)])
-    -- | otherwise = error("some error")
+    -- | otherwise = lexAnalyzer xs "" (output ++ [("Unkown", x)])
+    | otherwise = error("Input could not be parsed")
