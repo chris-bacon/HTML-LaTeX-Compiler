@@ -16,12 +16,26 @@ Windows: `Main.exe <filename.html>`
 > Syntax: well-formed
 > LaTeX successfully compiled
 ```
-Alternatively, if there is a syntax error, then the compiler will throw it out. 
+Alternatively, if there is a syntax error, then the compiler will throw it out.
 ## How it works
 
 A compiler is typically split into a frontend and a backend. The frontend parses the source file into lexemes, which are then submitted to syntactic and semantic analysis. Syntactic and semantic analyses are handled by the syntactic and semantic analysers, or, in this case, the parser. This process creates a intermediate representation of the source, which is processed by the backend creating the target translation. (Optimisations are handled in the backend also, though this compiler does not make any optimisations.)
 
 HTML is (at least) a context free language due to the fact that opening and closing tags have dependencies between them (and so some form of _unbounded_ memory is required). Therefore, any grammar describing HTML needs to capture these dependencies, and dependencies are not capturable by a regular grammar, meaning that HTML needs at least a context-free grammar to describe it. The parser handles these dependencies, assessing whether the source is syntactically well-formed HTML.
+
+### Example
+
+Suppose we have the following HTML:
+
+`<p><b><i>red dog</i></b></p>`
+
+This will be passed into the Lexical Analyser, which will parse the input into a series of lexical tokens and their attributes:
+
+`[("sTag", "p"), ("sTag", "bold"), ("sTag", "italics"), ("Word", "red"), ("Word", "dog"), ("eTag", "italics"), ("eTag", "bold"), ("eTag", "p")]`
+
+This will then undergo syntacic analysis, which will determine whether it is of a valid form or not. If it is not valid, an error will be thrown. Otherwise, it will be passed on to the code generator, which will produce the following LaTeX code:
+
+`\textbf{\textit{reddog}}`
 
 ## TODO
 
