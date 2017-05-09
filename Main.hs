@@ -7,7 +7,7 @@ import Data.List.Split
 import LexicalAnalyzer
 import Parser
 -- Backend
--- import CodeGenerator
+import CodeGenerator
 
 main :: IO ()
 main = do
@@ -18,11 +18,11 @@ main = do
     putStr x
     putStrLn "..."
     let tokens = lexAnalyzer inputStream [] []
-
     let lexemes = map fst tokens
         attributes = map snd tokens
         errors = parse lexemes
 
+    -- Testing only
     print lexemes
     print attributes
 
@@ -31,9 +31,8 @@ main = do
     else
         error("Syntax error found...")
 
-    -- codeGenerator tokens
+    let latex = generateLaTeX tokens ""
 
-    -- let result1 = addBeginningAndEnding result
-
-    -- writeFile "LaTeX/example2.tex" ?tokens?
+    writeFile "LaTeX/example2.tex" latex
+    putStrLn "LaTeX successfully compiled"
     return ()
