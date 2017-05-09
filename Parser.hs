@@ -3,7 +3,7 @@ module Parser where
 -- This is a recursive descent parser, where each context-free production rule is represented by a function
 -- This can also be considered a formal definition of HTML, as accepted by this compiler.
 -- The parser is where syntacic and semantic analysis is usually carried out, but this parse, for the moment,
--- only handles syntactic analysis. 
+-- only handles syntactic analysis.
 
 -- lookahead is the next lexeme
 parse :: [String] -> [String]
@@ -14,7 +14,6 @@ parse lexemes
     | lookahead == "Op" = parse $ match "Op" lexemes
     | lookahead == "eTag" = lexemes
     | lookahead == "Lit" = parse $ match "Lit" lexemes
-    | lookahead == "Unkown" = parse $ match "Unkown" lexemes -- TODO: TESTING ONLY
     | otherwise = error("Missing Lexeme or invalid token")
     where
         lookahead = head lexemes
