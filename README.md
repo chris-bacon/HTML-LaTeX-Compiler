@@ -33,9 +33,9 @@ This will be passed into the Lexical Analyser, which will parse the input into a
 
 `[("sTag", "p"), ("sTag", "bold"), ("sTag", "italics"), ("Word", "red"), ("Word", "dog"), ("eTag", "italics"), ("eTag", "bold"), ("eTag", "p")]`
 
-This will then undergo syntacic analysis, which will determine whether it is of a valid form or not. If it is not valid, an error will be thrown. Otherwise, it will be passed on to the code generator, which will produce the following LaTeX code:
+This will then undergo syntactic analysis, which will determine whether it is of a valid form or not. If it is not valid, an error will be thrown. Otherwise, it will be passed on to the code generator, which will produce the following LaTeX code:
 
-`\textbf{\textit{reddog}}`
+`\textbf{\textit{red dog}}`
 
 ## TODO
 
