@@ -23,8 +23,8 @@ main = do
         errors = parse lexemes
 
     -- Testing only
-    print lexemes
-    print attributes
+    --print lexemes
+    --print attributes
 
     if length errors == 0 then
         putStrLn "Syntax: well-formed"

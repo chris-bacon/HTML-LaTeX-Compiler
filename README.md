@@ -1,17 +1,16 @@
 # HTML-LaTeX Compiler
 
-**Work in progress. This is my first compiler and first multi-file Haskell project.**
+**Proof of Concept. This is my first compiler and first multi-file Haskell project.**
 
 This is a source-to-source compiler that takes HTML and compiles it to LaTeX. The frontend and backend are written in Haskell.
 
 ## How to run
 ```
-Linux: `./Main <filename.html>`
-Windows: `Main.exe <filename.html>`
+Linux: `./HTMLLaTeXCompiler <filename.html>`
 ```
 ### What you should see:
 ```
-> $ ./Main testOne.html
+> $ ./HTMLLaTeXCompiler testOne.html
 > Compiling tests/testOne.html...
 > Syntax: well-formed
 > LaTeX successfully compiled

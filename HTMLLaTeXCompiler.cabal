@@ -1,0 +1,41 @@
+name:                HTMLLaTeXCompiler
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/githubuser/HTMLLaTeXCompiler#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2017 Author name here
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      Frontend
+  exposed-modules:     LexicalAnalyzer
+                     , Parser
+  build-depends:       base >= 4.7 && < 5
+                     , regex-posix
+  default-language:    Haskell2010
+
+  hs-source-dirs:      Backend
+  exposed-modules:     CodeGenerator
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+
+executable HTMLLaTeXCompiler
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -O2 -threaded
+  build-depends:       base
+                     , HTMLLaTeXCompiler
+                     , regex-posix
+                     , split
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/githubuser/HTMLLaTeXCompiler

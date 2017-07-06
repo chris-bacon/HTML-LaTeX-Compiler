@@ -1,5 +1,4 @@
 *.hi
 *.o
 .git
-*.cabal
-Setup.hs
+.stack-work/
