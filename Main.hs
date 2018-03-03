@@ -14,15 +14,17 @@ main = do
     (x:xs) <- getArgs
     file <- readFile x
     let inputStream = splitOn "" file
-    putStrLn $ "Compiling " ++ x ++ "..."
+    putStr "Compiling "
+    putStr x
+    putStrLn "..."
     let tokens = lexAnalyzer inputStream [] []
     let lexemes = map fst tokens
         attributes = map snd tokens
         errors = parse lexemes
 
     -- Testing only
-    --print lexemes
-    --print attributes
+    print lexemes
+    print attributes
 
     if length errors == 0 then
         putStrLn "Syntax: well-formed"
