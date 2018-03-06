@@ -13,6 +13,8 @@ data Lit
     = String
     | Int
 
+type Lexemes = [String]
+
 -- lookahead is the next lexeme
 parse :: [String] -> [String]
 parse [] = []
@@ -38,11 +40,8 @@ parse lexemes
 tag lexemes = match "eTag" (parse (match "sTag" lexemes))
 
 -- If a match is successful "execute" the terminal by moving on to the next lexeme
-match :: String -> [String] -> [String]
+match :: String -> Lexemes -> Lexemes
 match lookahead [] = error("Syntax Error... Possibily missing tag")
-match lookahead lexemes
-    | lookahead == terminal = nextTerminal
-    | otherwise = error("Syntax Error... Mismatch: (1) "++ lookahead ++ " (2) " ++ terminal)
-    where
-        terminal = head lexemes
-        nextTerminal = tail lexemes
+match lookahead (l:ls)
+    | lookahead == l = ls
+    | otherwise = error("Syntax Error... Mismatch: (1) "++ lookahead ++ " (2) " ++ l)
