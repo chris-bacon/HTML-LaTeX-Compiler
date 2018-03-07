@@ -8,6 +8,7 @@ import Text.Regex.Posix
 -- Here we are attempting to simulate a deterministic finite automaton.
 
 type Tokens = ([Char], [Char])
+type SplitHTML = [String]
 
 --[[:space:]] = whitespace
 isLetterDigit :: String -> Bool
@@ -18,11 +19,10 @@ bufferClear "" = True
 bufferClear _ = False
 
 -- Parse input into lexemes
-
-lexAnalyzer :: [String] -> [Tokens]
+lexAnalyzer :: SplitHTML -> [Tokens]
 lexAnalyzer html = go html [] [] 
     where
-        go :: [String] -> [Char] -> [Tokens] -> [Tokens]
+        go :: SplitHTML -> [Char] -> [Tokens] -> [Tokens]
         go [] _ output = output
         go (x:xs) buffer output
             -- Word that precedes a tag with no delimiting whitespace
