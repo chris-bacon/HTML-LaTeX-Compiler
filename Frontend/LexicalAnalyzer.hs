@@ -18,138 +18,145 @@ bufferClear "" = True
 bufferClear _ = False
 
 -- Parse input into lexemes
-lexAnalyzer :: [[Char]] -> [Char] -> [Tokens] -> [Tokens]
-lexAnalyzer [] buffer output = output
-lexAnalyzer (x:xs) buffer output
+
+lexAnalyzer :: [String] -> [Tokens]
+lexAnalyzer html = go html [] [] 
+    where
+        go :: [String] -> [Char] -> [Tokens] -> [Tokens]
+        go [] _ output = output
+        go (x:xs) buffer output
+--lexAnalyzer :: [String] -> [Char] -> [Tokens] -> [Tokens]
+--lexAnalyzer [] buffer output = output
+--lexAnalyzer (x:xs) buffer output
     -- Word that precedes a tag with no delimiting whitespace
-    | (isLetterDigit buffer) && (x == "<") = lexAnalyzer xs "<" (output ++ [("Word", buffer)])
+            | (isLetterDigit buffer) && (x == "<") = go xs "<" (output ++ [("Word", buffer)])
 
-    | x == "" = lexAnalyzer xs "" output
-    | x == "<" = lexAnalyzer xs "<" output
-    | buffer ++ x == "</" = lexAnalyzer xs "</" output
+            | x == "" = go xs "" output
+            | x == "<" = go xs "<" output
+            | buffer ++ x == "</" = go xs "</" output
 
-    -- new lines
-    | x == "\\" = lexAnalyzer xs "\\" output
-    | buffer ++ x == "\n" = lexAnalyzer xs "" output
+            -- new lines
+            | x == "\\" = go xs "\\" output
+            | buffer ++ x == "\n" = go xs "" output
 
-    -- bold
-    | buffer ++ x == "<b" = lexAnalyzer xs "<b" output
-    | buffer ++ x == "<b>" = lexAnalyzer xs "" (output ++ [("sTag", "bold")])
+            -- bold
+            | buffer ++ x == "<b" = go xs "<b" output
+            | buffer ++ x == "<b>" = go xs "" (output ++ [("sTag", "bold")])
 
-    | buffer ++ x == "</b" = lexAnalyzer xs "</b" output
-    | buffer ++ x == "</b>" = lexAnalyzer xs "" (output ++ [("eTag", "bold")])
+            | buffer ++ x == "</b" = go xs "</b" output
+            | buffer ++ x == "</b>" = go xs "" (output ++ [("eTag", "bold")])
 
-    -- strong
-    | buffer ++ x == "<s" = lexAnalyzer xs "<s" output
-    | buffer ++ x == "<st" = lexAnalyzer xs "<st" output
-    | buffer ++ x == "<str" = lexAnalyzer xs "<str" output
-    | buffer ++ x == "<stro" = lexAnalyzer xs "<stro" output
-    | buffer ++ x == "<stron" = lexAnalyzer xs "<stron" output
-    | buffer ++ x == "<strong" = lexAnalyzer xs "<strong" output
-    | buffer ++ x == "<strong>" = lexAnalyzer xs "" (output ++ [("sTag", "strong")])
+            -- strong
+            | buffer ++ x == "<s" = go xs "<s" output
+            | buffer ++ x == "<st" = go xs "<st" output
+            | buffer ++ x == "<str" = go xs "<str" output
+            | buffer ++ x == "<stro" = go xs "<stro" output
+            | buffer ++ x == "<stron" = go xs "<stron" output
+            | buffer ++ x == "<strong" = go xs "<strong" output
+            | buffer ++ x == "<strong>" = go xs "" (output ++ [("sTag", "strong")])
 
-    | buffer ++ x == "<s" = lexAnalyzer xs "<s" output
-    | buffer ++ x == "<st" = lexAnalyzer xs "<st" output
-    | buffer ++ x == "<str" = lexAnalyzer xs "<str" output
-    | buffer ++ x == "<stro" = lexAnalyzer xs "<stro" output
-    | buffer ++ x == "<stron" = lexAnalyzer xs "<stron" output
-    | buffer ++ x == "<strong" = lexAnalyzer xs "<strong" output
-    | buffer ++ x == "<strong>" = lexAnalyzer xs "" (output ++ [("eTag", "strong")])
+            | buffer ++ x == "<s" = go xs "<s" output
+            | buffer ++ x == "<st" = go xs "<st" output
+            | buffer ++ x == "<str" = go xs "<str" output
+            | buffer ++ x == "<stro" = go xs "<stro" output
+            | buffer ++ x == "<stron" = go xs "<stron" output
+            | buffer ++ x == "<strong" = go xs "<strong" output
+            | buffer ++ x == "<strong>" = go xs "" (output ++ [("eTag", "strong")])
 
-    -- italics
-    | buffer ++ x == "<i" = lexAnalyzer xs "<i" output
-    | buffer ++ x == "<i>" = lexAnalyzer xs "" (output ++ [("sTag", "italics")])
+            -- italics
+            | buffer ++ x == "<i" = go xs "<i" output
+            | buffer ++ x == "<i>" = go xs "" (output ++ [("sTag", "italics")])
 
-    | buffer ++ x == "</i" = lexAnalyzer xs "</i" output
-    | buffer ++ x == "</i>" = lexAnalyzer xs "" (output ++ [("eTag", "italics")])
+            | buffer ++ x == "</i" = go xs "</i" output
+            | buffer ++ x == "</i>" = go xs "" (output ++ [("eTag", "italics")])
 
-    -- emphasis
-    | buffer ++ x == "<e" = lexAnalyzer xs "<e" output
-    | buffer ++ x == "<em" = lexAnalyzer xs "<em" output
-    | buffer ++ x == "<em>" = lexAnalyzer xs "" (output ++ [("sTag", "em")])
+            -- emphasis
+            | buffer ++ x == "<e" = go xs "<e" output
+            | buffer ++ x == "<em" = go xs "<em" output
+            | buffer ++ x == "<em>" = go xs "" (output ++ [("sTag", "em")])
 
-    | buffer ++ x == "</e" = lexAnalyzer xs "</e" output
-    | buffer ++ x == "</em" = lexAnalyzer xs "</em" output
-    | buffer ++ x == "</em>" = lexAnalyzer xs "" (output ++ [("eTag", "em")])
+            | buffer ++ x == "</e" = go xs "</e" output
+            | buffer ++ x == "</em" = go xs "</em" output
+            | buffer ++ x == "</em>" = go xs "" (output ++ [("eTag", "em")])
 
-    -- paragraph
-    | buffer ++ x == "<p" = lexAnalyzer xs "<p" output
-    | buffer ++ x == "<p>" = lexAnalyzer xs "" (output ++ [("sTag", "p")])
+            -- paragraph
+            | buffer ++ x == "<p" = go xs "<p" output
+            | buffer ++ x == "<p>" = go xs "" (output ++ [("sTag", "p")])
 
-    | buffer ++ x == "</p" = lexAnalyzer xs "</p" output
-    | buffer ++ x == "</p>" = lexAnalyzer xs "" (output ++ [("eTag", "p")])
+            | buffer ++ x == "</p" = go xs "</p" output
+            | buffer ++ x == "</p>" = go xs "" (output ++ [("eTag", "p")])
 
-    -- body
-    | buffer ++ x == "<b" = lexAnalyzer xs "<b" output
-    | buffer ++ x == "<bo" = lexAnalyzer xs "<bo" output
-    | buffer ++ x == "<bod" = lexAnalyzer xs "<bod" output
-    | buffer ++ x == "<body" = lexAnalyzer xs "<body" output
-    | buffer ++ x == "<body>" = lexAnalyzer xs "" output
+            -- body
+            | buffer ++ x == "<b" = go xs "<b" output
+            | buffer ++ x == "<bo" = go xs "<bo" output
+            | buffer ++ x == "<bod" = go xs "<bod" output
+            | buffer ++ x == "<body" = go xs "<body" output
+            | buffer ++ x == "<body>" = go xs "" output
 
-    | buffer ++ x == "</b" = lexAnalyzer xs "</b" output
-    | buffer ++ x == "</bo" = lexAnalyzer xs "</bo" output
-    | buffer ++ x == "</bod" = lexAnalyzer xs "</bod" output
-    | buffer ++ x == "</body" = lexAnalyzer xs "</body" output
-    | buffer ++ x == "</body>" = lexAnalyzer xs "" output
+            | buffer ++ x == "</b" = go xs "</b" output
+            | buffer ++ x == "</bo" = go xs "</bo" output
+            | buffer ++ x == "</bod" = go xs "</bod" output
+            | buffer ++ x == "</body" = go xs "</body" output
+            | buffer ++ x == "</body>" = go xs "" output
 
-    -- pre
-    | buffer ++ x == "<p" = lexAnalyzer xs "<p" output
-    | buffer ++ x == "<pr" = lexAnalyzer xs "<pr" output
-    | buffer ++ x == "<pre" = lexAnalyzer xs "<pre" output
-    | buffer ++ x == "<pre>" = lexAnalyzer xs "" (output ++ [("sTag", "pre")])
+            -- pre
+            | buffer ++ x == "<p" = go xs "<p" output
+            | buffer ++ x == "<pr" = go xs "<pr" output
+            | buffer ++ x == "<pre" = go xs "<pre" output
+            | buffer ++ x == "<pre>" = go xs "" (output ++ [("sTag", "pre")])
 
-    | buffer ++ x == "</p" = lexAnalyzer xs "</p" output
-    | buffer ++ x == "</pr" = lexAnalyzer xs "</pr" output
-    | buffer ++ x == "</pre" = lexAnalyzer xs "</pre" output
-    | buffer ++ x == "</pre>" = lexAnalyzer xs "" (output ++ [("eTag", "pre")])
+            | buffer ++ x == "</p" = go xs "</p" output
+            | buffer ++ x == "</pr" = go xs "</pr" output
+            | buffer ++ x == "</pre" = go xs "</pre" output
+            | buffer ++ x == "</pre>" = go xs "" (output ++ [("eTag", "pre")])
 
-    -- head
-    | buffer ++ x == "<h" = lexAnalyzer xs "<h" output
-    | buffer ++ x == "<he" = lexAnalyzer xs "<he" output
-    | buffer ++ x == "<hea" = lexAnalyzer xs "<hea" output
-    | buffer ++ x == "<head" = lexAnalyzer xs "<head" output
-    | buffer ++ x == "<head>" = lexAnalyzer xs "" output
+            -- head
+            | buffer ++ x == "<h" = go xs "<h" output
+            | buffer ++ x == "<he" = go xs "<he" output
+            | buffer ++ x == "<hea" = go xs "<hea" output
+            | buffer ++ x == "<head" = go xs "<head" output
+            | buffer ++ x == "<head>" = go xs "" output
 
-    | buffer ++ x == "</h" = lexAnalyzer xs "</h" output
-    | buffer ++ x == "</he" = lexAnalyzer xs "</he" output
-    | buffer ++ x == "</hea" = lexAnalyzer xs "</hea" output
-    | buffer ++ x == "</head" = lexAnalyzer xs "</head" output
-    | buffer ++ x == "</head>" = lexAnalyzer xs "" output
+            | buffer ++ x == "</h" = go xs "</h" output
+            | buffer ++ x == "</he" = go xs "</he" output
+            | buffer ++ x == "</hea" = go xs "</hea" output
+            | buffer ++ x == "</head" = go xs "</head" output
+            | buffer ++ x == "</head>" = go xs "" output
 
-    -- html
-    | buffer ++ x == "<h" = lexAnalyzer xs "<h" output
-    | buffer ++ x == "<ht" = lexAnalyzer xs "<ht" output
-    | buffer ++ x == "<htm" = lexAnalyzer xs "<htm" output
-    | buffer ++ x == "<html" = lexAnalyzer xs "<html" output
-    | buffer ++ x == "<html>" = lexAnalyzer xs "" (output ++ [("sTag", "startDocument")])
+            -- html
+            | buffer ++ x == "<h" = go xs "<h" output
+            | buffer ++ x == "<ht" = go xs "<ht" output
+            | buffer ++ x == "<htm" = go xs "<htm" output
+            | buffer ++ x == "<html" = go xs "<html" output
+            | buffer ++ x == "<html>" = go xs "" (output ++ [("sTag", "startDocument")])
 
-    | buffer ++ x == "</h" = lexAnalyzer xs "</h" output
-    | buffer ++ x == "</ht" = lexAnalyzer xs "</ht" output
-    | buffer ++ x == "</htm" = lexAnalyzer xs "</htm" output
-    | buffer ++ x == "</html" = lexAnalyzer xs "</html" output
-    | buffer ++ x == "</html>" = lexAnalyzer xs "" (output ++ [("eTag", "endDocument")])
+            | buffer ++ x == "</h" = go xs "</h" output
+            | buffer ++ x == "</ht" = go xs "</ht" output
+            | buffer ++ x == "</htm" = go xs "</htm" output
+            | buffer ++ x == "</html" = go xs "</html" output
+            | buffer ++ x == "</html>" = go xs "" (output ++ [("eTag", "endDocument")])
 
-    -- Operators
-    | x == ">" = lexAnalyzer xs "" (output ++ [("Op", ">")])
-    | x == "=" = lexAnalyzer xs "" (output ++ [("Op", "=")])
-    | x == "+" = lexAnalyzer xs "" (output ++ [("Op", "+")])
-    | x == "-" = lexAnalyzer xs "" (output ++ [("Op", "-")])
-    | x == "*" = lexAnalyzer xs "" (output ++ [("Op", "*")])
-    | x == "/" = lexAnalyzer xs "" (output ++ [("Op", "/")])
-    | buffer ++ x == "<=" = lexAnalyzer xs "" (output ++ [("Op", "<=")])
-    | buffer ++ x == "<>" = lexAnalyzer xs "" (output ++ [("Op", "<>")])
-    | buffer ++ x == "=>" = lexAnalyzer xs "" (output ++ [("Op", "=>")])
+            -- Operators
+            | x == ">" = go xs "" (output ++ [("Op", ">")])
+            | x == "=" = go xs "" (output ++ [("Op", "=")])
+            | x == "+" = go xs "" (output ++ [("Op", "+")])
+            | x == "-" = go xs "" (output ++ [("Op", "-")])
+            | x == "*" = go xs "" (output ++ [("Op", "*")])
+            | x == "/" = go xs "" (output ++ [("Op", "/")])
+            | buffer ++ x == "<=" = go xs "" (output ++ [("Op", "<=")])
+            | buffer ++ x == "<>" = go xs "" (output ++ [("Op", "<>")])
+            | buffer ++ x == "=>" = go xs "" (output ++ [("Op", "=>")])
 
-    | x == "(" = lexAnalyzer xs "" (output ++ [("Lit", "(")])
-    | x == ")" && bufferClear buffer = lexAnalyzer xs "" (output ++ [("Lit", ")")])
-    | x == ")" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ")")])
-    -- Alphanumeric
-    | buffer ++ x == buffer ++ " " = lexAnalyzer xs "" (output ++ [("Word", buffer)])
-    | buffer ++ x == buffer ++ "!" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", "!")])
-    | buffer ++ x == buffer ++ "." = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ".")])
-    | buffer ++ x == buffer ++ "," = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ",")])
-    | buffer ++ x == buffer ++ ";" = lexAnalyzer xs "" (output ++ [("Word", buffer), ("Lit", ";")])
-    | isLetterDigit (buffer ++ x) = lexAnalyzer xs (buffer ++ x) output
-    -- x
-    -- | otherwise = lexAnalyzer xs "" (output ++ [("Unkown", x)])
-    | otherwise = error("Input could not be parsed")
+            | x == "(" = go xs "" (output ++ [("Lit", "(")])
+            | x == ")" && bufferClear buffer = go xs "" (output ++ [("Lit", ")")])
+            | x == ")" = go xs "" (output ++ [("Word", buffer), ("Lit", ")")])
+            -- Alphanumeric
+            | buffer ++ x == buffer ++ " " = go xs "" (output ++ [("Word", buffer)])
+            | buffer ++ x == buffer ++ "!" = go xs "" (output ++ [("Word", buffer), ("Lit", "!")])
+            | buffer ++ x == buffer ++ "." = go xs "" (output ++ [("Word", buffer), ("Lit", ".")])
+            | buffer ++ x == buffer ++ "," = go xs "" (output ++ [("Word", buffer), ("Lit", ",")])
+            | buffer ++ x == buffer ++ ";" = go xs "" (output ++ [("Word", buffer), ("Lit", ";")])
+            | isLetterDigit (buffer ++ x) = go xs (buffer ++ x) output
+            -- x
+            -- | otherwise = go xs "" (output ++ [("Unkown", x)])
+            | otherwise = error("Input could not be parsed")

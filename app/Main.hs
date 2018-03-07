@@ -15,7 +15,7 @@ main = do
     file <- readFile x
     let inputStream = splitOn "" file
     putStrLn $ "Compiling " ++ x ++ "..."
-    let tokens = lexAnalyzer inputStream [] []
+    let tokens = lexAnalyzer inputStream
     let lexemes = map fst tokens
         attributes = map snd tokens
         errors = parse lexemes
