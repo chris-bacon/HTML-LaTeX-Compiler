@@ -26,7 +26,7 @@ library
   build-depends:       base >= 4.7 && < 5
   default-language:    Haskell2010
 
-executable HTMLLaTeXCompiler
+executable html-compile
   hs-source-dirs:      app
   main-is:             Main.hs
   ghc-options:         -O2 -threaded
@@ -36,7 +36,7 @@ executable HTMLLaTeXCompiler
                      , split
   default-language:    Haskell2010
 
-test-suite HTMLLaTeXCompiler-test
+test-suite tests
   type:                exitcode-stdio-1.0
   main-is:             Spec.hs
   hs-source-dirs:      tests
@@ -51,4 +51,4 @@ test-suite HTMLLaTeXCompiler-test
   
 source-repository head
   type:     git
-  location: https://github.com/githubuser/HTMLLaTeXCompiler
+  location: https://github.com/chris-bacon/HTMLLaTeXCompiler
