@@ -2,12 +2,12 @@ name:                HTMLLaTeXCompiler
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/HTMLLaTeXCompiler#readme
+homepage:            https://github.com/chris-bacon/HTMLLaTeXCompiler#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2017 Author name here
+author:              Christopher Bacon
+maintainer:          chrisbacon2009@hotmail.com
+copyright:           2017 Christopher Bacon
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
