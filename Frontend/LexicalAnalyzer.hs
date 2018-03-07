@@ -25,10 +25,7 @@ lexAnalyzer html = go html [] []
         go :: [String] -> [Char] -> [Tokens] -> [Tokens]
         go [] _ output = output
         go (x:xs) buffer output
---lexAnalyzer :: [String] -> [Char] -> [Tokens] -> [Tokens]
---lexAnalyzer [] buffer output = output
---lexAnalyzer (x:xs) buffer output
-    -- Word that precedes a tag with no delimiting whitespace
+            -- Word that precedes a tag with no delimiting whitespace
             | (isLetterDigit buffer) && (x == "<") = go xs "<" (output ++ [("Word", buffer)])
 
             | x == "" = go xs "" output
