@@ -1,4 +1,5 @@
-# HTML-LaTeX Compiler
+# Htex
+## HTML-LaTeX Compiler
 
 **Proof of Concept. This is my first compiler and first multi-file Haskell project.**
 
