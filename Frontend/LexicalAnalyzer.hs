@@ -14,9 +14,9 @@ type SplitHTML = [String]
 isLetterDigit :: String -> Bool
 isLetterDigit char = char =~ "([a-zA-Z0-9])+" :: Bool
 
-bufferClear :: String -> Bool
-bufferClear "" = True
-bufferClear _ = False
+isBufferClear :: String -> Bool
+isBufferClear "" = True
+isBufferClear _ = False
 
 -- Parse input into lexemes
 lexAnalyzer :: SplitHTML -> [Tokens]
@@ -145,7 +145,7 @@ lexAnalyzer html = go html [] []
             | buffer ++ x == "=>" = go xs "" (output ++ [("Op", "=>")])
 
             | x == "(" = go xs "" (output ++ [("Lit", "(")])
-            | x == ")" && bufferClear buffer = go xs "" (output ++ [("Lit", ")")])
+            | x == ")" && isBufferClear buffer = go xs "" (output ++ [("Lit", ")")])
             | x == ")" = go xs "" (output ++ [("Word", buffer), ("Lit", ")")])
             -- Alphanumeric
             | buffer ++ x == buffer ++ " " = go xs "" (output ++ [("Word", buffer)])
