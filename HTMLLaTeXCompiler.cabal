@@ -42,7 +42,7 @@ test-suite HTMLLaTeXCompiler-test
   hs-source-dirs:      tests
   exposed-modules:     LexicalAnalyzerTest
                      , ParserTest
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base >= 4.7 && < 5
                      , HTMLLaTeXCompiler
                      , hspec
