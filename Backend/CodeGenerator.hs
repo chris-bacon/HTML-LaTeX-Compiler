@@ -33,5 +33,6 @@ generateLaTeX intRep output
         lookahead = fst $ f (tail intRep)
         attribute = snd $ head intRep
 
+-- TODO: Refactor away
 f [] = ("", "")
 f intRep = head intRep
