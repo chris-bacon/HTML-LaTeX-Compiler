@@ -29,7 +29,7 @@ main = do
     else
         error("Syntax error found...")
 
-    let latex = generateLaTeX tokens ""
+    let latex = generateLaTeX tokens
 
     writeFile "LaTeX/example2.tex" latex
     putStrLn "LaTeX successfully compiled"
