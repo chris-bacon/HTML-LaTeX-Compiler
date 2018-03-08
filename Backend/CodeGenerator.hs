@@ -30,5 +30,8 @@ generateLaTeX intRep output
     | otherwise = generateLaTeX (tail intRep) output
     where
         token = fst $ head intRep
-        lookahead = fst $ head $ tail intRep
+        lookahead = fst $ f (tail intRep)
         attribute = snd $ head intRep
+
+f [] = ("", "")
+f intRep = head intRep

@@ -4,7 +4,9 @@ import Test.Hspec
 
 import qualified CodeGenerator as CG
 
-test = hspec $ do
+testCodeGenerator = hspec $ do
     describe "Code Generator" $ do
-        it "returns LaTeX when given 'red' as input" $ do
-            Parser.match [("Word", "red")] `shouldBe` "red"
+        it "returns LaTeX 'red' when given 'red' as input" $ do
+            CG.generateLaTeX [("Word", "red")] [] `shouldBe` "red"
+        it "returns LaTeX '\\textit{red}' when given tokenised version of '<i>red</i>' as input" $ do
+            CG.generateLaTeX [("sTag", "italics"), ("Word", "red"), ("eTag", "italics")] [] `shouldBe` "\\textit{red}"
