@@ -5,7 +5,7 @@ generateLaTeX intRep = go intRep ""
     where
         go :: [(String, String)] -> String -> String
         go [] output = output
-        go intRep output
+        go (ir:irs) output
             -- Opening tags
             | token == "sTag" && attribute == "startDocument" = go (tail intRep) (output ++ "\\documentclass[11pt]{article}\n\n\\begin{document}\n\n")
             | token == "sTag" && attribute == "bold" = go (tail intRep) (output ++ "\\textbf{")
