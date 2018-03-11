@@ -1,11 +1,45 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module LexicalAnalyzer where
 
+import Control.Applicative
+import Data.Void
 import Text.Regex.Posix
+import Text.Megaparsec
+import qualified Text.Megaparsec.Lexer as L
 
 -- This is the lexical analysis of the compiler, which takes a string and returns a set of lexemes and attributes.
 -- Here we are attempting to simulate a deterministic finite automaton.
+
+type Parser = Parsec Void String
+
+data Stmt
+    = HTMLTag Content 
+    | BoldTag Content
+    | ParaTag Content
+    | ItalicsTag Content
+
+data Content = Content
+
+--stmt :: Parser Stmt
+--stmt = htmlStmt
+----    <|> boldStmt
+----    <|> paraStmt
+----    <|> italicsStmt
+--
+--htmlStmt :: Parser Stmt
+--htmlStmt = do
+--    tag "html"
+--    stmtContent <- stmt
+--    tag "html"
+--    return (HTMLTag stmtContent)
+
+--skipWhitespace :: Parser ()
+skipWhitespace = string " "
+
+mySpace :: Parser ()
+mySpace = L.space skipWhitespace (L.skipLineComment "//") (L.skipBlockComment "/*" "*/")
 
 type Tokens = ([Char], [Char])
 type SplitHTML = [String]
