@@ -38,10 +38,6 @@ runParse p s = M.parse p "" s
 
 run input = runParse stmt input
 
-crazyRun = do
-    let (Right result) = run "<html><html><p>This is a red dog</p></html></html>"
-    print result
-
 stmt :: MS.Parser Stmt
 stmt = tagStmt "html" HTMLTag 
     <|> tagStmt "head" HeadTag 
