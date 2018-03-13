@@ -6,40 +6,87 @@ module LexicalAnalyzer where
 import Control.Applicative
 import Data.Void
 import Text.Regex.Posix
-import Text.Megaparsec
-import qualified Text.Megaparsec.Lexer as L
+import qualified Text.Megaparsec as M
+import qualified Text.Megaparsec.String as MS
+import qualified Text.Megaparsec.Lexer as ML
 
 -- This is the lexical analysis of the compiler, which takes a string and returns a set of lexemes and attributes.
 -- Here we are attempting to simulate a deterministic finite automaton.
 
-type Parser = Parsec Void String
-
-data Stmt
-    = HTMLTag Content 
+data HTMLStmt
+    = HTMLTag Content
+    | HeadTag Content
+    | BodyTag Content
+    | EmphasisTag Content
+    | StrongTag Content
     | BoldTag Content
     | ParaTag Content
     | ItalicsTag Content
+    deriving (Show)
 
-data Content = Content
+data Content = Text String
 
---stmt :: Parser Stmt
+instance Show (Content) where
+    show (Text a) = show a
+
+whitespaceParser :: MS.Parser String
+whitespaceParser = M.string " "
+
+-- Naming conventions for HTML tag parsers:
+-- Opening tags are named :- tagnameParser
+-- Closing tags are named :- tagnameParser'
+
+htmlParser :: MS.Parser String
+htmlParser = M.string "<html>"
+
+htmlParser' :: MS.Parser String
+htmlParser' = M.string "</html>"
+
+headParser :: MS.Parser String
+headParser = M.string "<head>"
+
+headParser' :: MS.Parser String
+headParser' = M.string "</head>"
+
+boldParser :: MS.Parser String
+boldParser = M.string "<bold>"
+
+boldParser' :: MS.Parser String
+boldParser' = M.string "</bold>"
+
+paraParser :: MS.Parser String
+paraParser = M.string "<p>"
+
+paraParser' :: MS.Parser String
+paraParser' = M.string "</p>"
+
+
+runParse :: Show a => MS.Parser a -> String -> IO ()
+runParse p s = M.parseTest p s
+
+input = "<html></html>"
+input2 = "<html>hello</html>"
+input3 = "<html><html></html></html>"
+
+run input = runParse htmlStmt input
+
 --stmt = htmlStmt
 ----    <|> boldStmt
 ----    <|> paraStmt
 ----    <|> italicsStmt
 --
---htmlStmt :: Parser Stmt
---htmlStmt = do
---    tag "html"
+
+htmlStmt = do
+    htmlParser
 --    stmtContent <- stmt
---    tag "html"
---    return (HTMLTag stmtContent)
+    htmlParser'
+    return (HTMLTag (Text stmtContent))
 
---skipWhitespace :: Parser ()
-skipWhitespace = string " "
+--skipWhitespace :: Parser String
+--skipWhitespace = string " "
 
-mySpace :: Parser ()
-mySpace = L.space skipWhitespace (L.skipLineComment "//") (L.skipBlockComment "/*" "*/")
+--mySpace :: Parser ()
+--mySpace = L.space skipWhitespace (L.skipLineComment "//") (L.skipBlockComment "/*" "*/")
 
 type Tokens = ([Char], [Char])
 type SplitHTML = [String]
