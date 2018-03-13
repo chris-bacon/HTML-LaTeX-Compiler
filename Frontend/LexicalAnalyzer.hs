@@ -33,7 +33,7 @@ data Stmt
 
 type Input = String
 
-runParse :: Show a => MS.Parser a -> String -> Either (M.ParseError (M.Token String) M.Dec) a
+runParse :: Show a => MS.Parser a -> Input -> Either (M.ParseError (M.Token String) M.Dec) a
 runParse p s = M.parse p "" s
 
 run input = runParse stmt input
