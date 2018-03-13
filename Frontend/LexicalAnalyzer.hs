@@ -8,86 +8,61 @@ import Data.Void
 import Text.Regex.Posix
 import qualified Text.Megaparsec as M
 import qualified Text.Megaparsec.String as MS
+import qualified Text.Megaparsec.Char as MC
 import qualified Text.Megaparsec.Lexer as ML
 
--- This is the lexical analysis of the compiler, which takes a string and returns a set of lexemes and attributes.
--- Here we are attempting to simulate a deterministic finite automaton.
+-- This is the lexical analysis of the compiler, which takes a string and returns a set of lexemes.
+-- The following context-free grammar is encoded in the Stmt data structure:
+  -- S ::= html | p | content | ...
+  -- html ::= <html>S</html>
+  -- p ::= <p>S</p>
+  -- ...
+  -- content ::= alphaNumChar | " " | ...
 
-data HTMLStmt
-    = HTMLTag Content
-    | HeadTag Content
-    | BodyTag Content
-    | EmphasisTag Content
-    | StrongTag Content
-    | BoldTag Content
-    | ParaTag Content
-    | ItalicsTag Content
-    deriving (Show)
+data Stmt
+    = HTMLTag Stmt
+    | HeadTag Stmt
+    | BodyTag Stmt
+    | ParaTag Stmt
+    | EmphasisTag Stmt
+    | StrongTag Stmt
+    | BoldTag Stmt
+    | ItalicsTag Stmt
+    | Text String
+    deriving (Show, Eq)
 
-data Content = Text String
+type Input = String
 
-instance Show (Content) where
-    show (Text a) = show a
+runParse :: Show a => MS.Parser a -> String -> Either (M.ParseError (M.Token String) M.Dec) a
+runParse p s = M.parse p "" s
 
-whitespaceParser :: MS.Parser String
-whitespaceParser = M.string " "
+run input = runParse stmt input
 
--- Naming conventions for HTML tag parsers:
--- Opening tags are named :- tagnameParser
--- Closing tags are named :- tagnameParser'
+crazyRun = do
+    let (Right result) = run "<html><html><p>This is a red dog</p></html></html>"
+    print result
 
-htmlParser :: MS.Parser String
-htmlParser = M.string "<html>"
+stmt :: MS.Parser Stmt
+stmt = tagStmt "html" HTMLTag 
+    <|> tagStmt "head" HeadTag 
+    <|> tagStmt "body" BodyTag
+    <|> tagStmt "p" ParaTag
+    <|> tagStmt "em" EmphasisTag
+    <|> tagStmt "b" BoldTag
+    <|> tagStmt "i" ItalicsTag
+    <|> contentStmt
 
-htmlParser' :: MS.Parser String
-htmlParser' = M.string "</html>"
+tagStmt :: String -> (Stmt -> Stmt) -> MS.Parser Stmt
+tagStmt htmlNode tagName = do
+    M.string $ concat ["<", htmlNode, ">"]
+    stmtContent <- stmt
+    M.string $ concat ["</", htmlNode, ">"]
+    return $ tagName (stmtContent)
 
-headParser :: MS.Parser String
-headParser = M.string "<head>"
+contentStmt :: MS.Parser Stmt
+contentStmt = some (MC.alphaNumChar <|> MC.char ' ') <|> MC.string "" >>= (\x -> return $ Text x)
 
-headParser' :: MS.Parser String
-headParser' = M.string "</head>"
-
-boldParser :: MS.Parser String
-boldParser = M.string "<bold>"
-
-boldParser' :: MS.Parser String
-boldParser' = M.string "</bold>"
-
-paraParser :: MS.Parser String
-paraParser = M.string "<p>"
-
-paraParser' :: MS.Parser String
-paraParser' = M.string "</p>"
-
-
-runParse :: Show a => MS.Parser a -> String -> IO ()
-runParse p s = M.parseTest p s
-
-input = "<html></html>"
-input2 = "<html>hello</html>"
-input3 = "<html><html></html></html>"
-
-run input = runParse htmlStmt input
-
---stmt = htmlStmt
-----    <|> boldStmt
-----    <|> paraStmt
-----    <|> italicsStmt
---
-
-htmlStmt = do
-    htmlParser
---    stmtContent <- stmt
-    htmlParser'
-    return (HTMLTag (Text stmtContent))
-
---skipWhitespace :: Parser String
---skipWhitespace = string " "
-
---mySpace :: Parser ()
---mySpace = L.space skipWhitespace (L.skipLineComment "//") (L.skipBlockComment "/*" "*/")
-
+-- OLD 
 type Tokens = ([Char], [Char])
 type SplitHTML = [String]
 
