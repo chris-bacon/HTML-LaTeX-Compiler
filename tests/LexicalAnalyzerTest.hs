@@ -13,6 +13,7 @@ inputDoubleHTMLTags = "<html><html></html></html>"
 inputParaRedDog = "<html><html><p>This is a red dog</p></html></html>"
 inputBoldRed = "<html><b>red</b></html>"
 inputWithNewlines = "<html>\n</html>"
+inputTextWithNewlines  = "red \n red"
 
 testLexicalAnalyzer = hspec $ do
     describe "LexicalAnalyzer" $ do
@@ -28,4 +29,7 @@ testLexicalAnalyzer = hspec $ do
                 result `shouldBe` LA.HTMLTag (LA.BoldTag (LA.Text "red"))
             it "is able to parse html with newline symbols" $ do
                 let (Right result) = LA.lexicalParse inputWithNewlines
-                result `shouldBe` LA.HTMLTag (LA.BoldTag (LA.Text "red"))
+                result `shouldBe` LA.HTMLTag (LA.Text "\n")
+            it "is able to parse text with newline symbols" $ do
+                let (Right result) = LA.lexicalParse inputTextWithNewlines
+                result `shouldBe` LA.Text "red \n red"

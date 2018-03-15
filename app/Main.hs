@@ -12,25 +12,29 @@ import CodeGenerator
 main :: IO ()
 main = do
     (x:xs) <- getArgs
-    file <- readFile x
-    let inputStream = splitOn "" file
-    putStrLn $ "Compiling " ++ x ++ "..."
-    let tokens = lexAnalyzer inputStream
-    let lexemes = map fst tokens
-        attributes = map snd tokens
-        errors = parse lexemes
+    fileContents <- readFile x
+    print fileContents
+    let inputStream = splitOn "" fileContents
+    let newTokens = lexicalParse fileContents
+--    print newTokens
+    return ()
+    --putStrLn $ "Compiling " ++ x ++ "..."
+    --let tokens = lexAnalyzer inputStream
+    --let lexemes = map fst tokens
+    --    attributes = map snd tokens
+    --    errors = parse lexemes
 
-    -- Testing only
-    --print lexemes
-    --print attributes
+    ---- Testing only
+    ----print lexemes
+    ----print attributes
 
-    if length errors == 0 then
-        putStrLn "Syntax: well-formed"
-    else
-        error("Syntax error found...")
+    --if length errors == 0 then
+    --    putStrLn "Syntax: well-formed"
+    --else
+    --    error("Syntax error found...")
 
-    let latex = generateLaTeX tokens
+    --let latex = generateLaTeX tokens
 
-    writeFile "LaTeX/example2.tex" latex
-    putStrLn "LaTeX successfully compiled"
+    --writeFile "LaTeX/example2.tex" latex
+    --putStrLn "LaTeX successfully compiled"
     return ()

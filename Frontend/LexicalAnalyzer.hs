@@ -11,13 +11,11 @@ import qualified Text.Megaparsec.String as MS
 import qualified Text.Megaparsec.Char as MC
 import qualified Text.Megaparsec.Lexer as ML
 
--- This is the lexical analysis of the compiler, which takes a string and returns a set of lexemes.
--- The following context-free grammar is encoded in the Stmt data structure:
-  -- S ::= html | p | content | ...
-  -- html ::= <html>S</html>
-  -- p ::= <p>S</p>
-  -- ...
-  -- content ::= alphaNumChar | " " | ...
+-- S ::= html | p | content | ...
+-- html ::= <html>S</html>
+-- p ::= <p>S</p>
+-- ...
+-- content ::= alphaNumChar | " " | ...
 
 data Stmt
     = HTMLTag Stmt
@@ -54,7 +52,7 @@ tagStmt htmlNode tagName = do
     return $ tagName (stmtContent)
 
 contentStmt :: MS.Parser Stmt
-contentStmt = some (MC.alphaNumChar <|> MC.char ' ') <|> MC.string "" <|> MC.string "\n" >>= (\x -> return $ Text x)
+contentStmt = some (MC.alphaNumChar <|> MC.char ' ' <|> MC.newline) <|> MC.string "" >>= (\x -> return $ Text x)
 
 runParse :: Show a => MS.Parser a -> Input -> Either (M.ParseError (M.Token String) M.Dec) a
 runParse p s = M.parse p "" s
