@@ -1,0 +1,54 @@
+name:                Htex
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/chris-bacon/Htex#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Christopher Bacon
+maintainer:          chrisbacon2009@hotmail.com
+copyright:           2017 Christopher Bacon
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      Frontend
+  exposed-modules:     LexicalAnalyzer
+                     , Parser
+  build-depends:       base >= 4.7 && < 5
+                     , regex-posix
+                     , megaparsec
+  default-language:    Haskell2010
+
+  hs-source-dirs:      Backend
+  exposed-modules:     CodeGenerator
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+
+executable htex
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -O2 -threaded
+  build-depends:       base
+                     , Htex 
+                     , regex-posix
+                     , split
+                     , megaparsec
+  default-language:    Haskell2010
+
+test-suite tests
+  type:                exitcode-stdio-1.0
+  main-is:             Spec.hs
+  hs-source-dirs:      tests
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base >= 4.7 && < 5
+                     , Htex
+                     , hspec
+                     , split
+  default-language:    Haskell2010
+  
+source-repository head
+  type:     git
+  location: https://github.com/chris-bacon/Htex
