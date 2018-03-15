@@ -24,6 +24,7 @@ data Stmt
     | HeadTag Stmt
     | BodyTag Stmt
     | ParaTag Stmt
+    | PreTag Stmt
     | EmphasisTag Stmt
     | StrongTag Stmt
     | BoldTag Stmt
@@ -33,17 +34,14 @@ data Stmt
 
 type Input = String
 
-runParse :: Show a => MS.Parser a -> Input -> Either (M.ParseError (M.Token String) M.Dec) a
-runParse p s = M.parse p "" s
-
-run input = runParse stmt input
-
 stmt :: MS.Parser Stmt
 stmt = tagStmt "html" HTMLTag 
     <|> tagStmt "head" HeadTag 
     <|> tagStmt "body" BodyTag
     <|> tagStmt "p" ParaTag
+    <|> tagStmt "pre" PreTag
     <|> tagStmt "em" EmphasisTag
+    <|> tagStmt "strong" StrongTag
     <|> tagStmt "b" BoldTag
     <|> tagStmt "i" ItalicsTag
     <|> contentStmt
@@ -56,7 +54,12 @@ tagStmt htmlNode tagName = do
     return $ tagName (stmtContent)
 
 contentStmt :: MS.Parser Stmt
-contentStmt = some (MC.alphaNumChar <|> MC.char ' ') <|> MC.string "" >>= (\x -> return $ Text x)
+contentStmt = some (MC.alphaNumChar <|> MC.char ' ') <|> MC.string "" <|> MC.string "\n" >>= (\x -> return $ Text x)
+
+runParse :: Show a => MS.Parser a -> Input -> Either (M.ParseError (M.Token String) M.Dec) a
+runParse p s = M.parse p "" s
+
+lexicalParse input = runParse stmt input
 
 -- OLD 
 type Tokens = ([Char], [Char])
