@@ -11,13 +11,15 @@ import CodeGenerator
 
 main :: IO ()
 main = do
-    (x:xs) <- getArgs
+    [x] <- getArgs
     fileContents <- readFile x
-    print fileContents
     let inputStream = splitOn "" fileContents
-    let newTokens = lexicalParse fileContents
---    print newTokens
-    return ()
+    let html = lexicalParse fileContents
+    case html of
+      Right t -> do
+          let latex = preProcessor ++ generateLaTeX t ++ postProcessor
+          print latex
+      Left err -> print err
     --putStrLn $ "Compiling " ++ x ++ "..."
     --let tokens = lexAnalyzer inputStream
     --let lexemes = map fst tokens
