@@ -1,40 +1,69 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies #-}
+
 module Parser where
 
--- This is a recursive descent parser, where each context-free production rule is represented by a function
--- This can also be considered a formal definition of HTML, as accepted by this compiler.
--- The parser is where syntacic and semantic analysis is usually carried out, but this parse, for the moment,
--- only handles syntactic analysis.
+import Control.Applicative
+import Data.Void
+import Text.Regex.Posix
+import qualified Text.Megaparsec as M
+import qualified Text.Megaparsec.String as MS
+import qualified Text.Megaparsec.Char as MC
+import qualified Text.Megaparsec.Lexer as ML
 
-data Expr
-    = STag Expr
-    | Lit
+-- S ::= html | p | content | ...
+-- html ::= <html>S</html>
+-- p ::= <p>S</p>
+-- ...
+-- content ::= alphaNumChar | " " | ...
 
-data Lit
-    = String
-    | Int
+data Stmt
+    = HTMLTag Stmt
+    | HeadTag Stmt
+    | BodyTag Stmt
+    | ParaTag Stmt
+    | PreTag Stmt
+    | EmphasisTag Stmt
+    | StrongTag Stmt
+    | BoldTag Stmt
+    | ItalicsTag Stmt
+    | Text String
+    deriving (Show, Eq)
 
-type Lexemes = [String]
+type Input = String
 
-parse :: [String] -> [String]
-parse [] = []
-parse lexemes
-    | lookahead == "sTag" = parse $ tag lexemes
-    | lookahead == "Word" = parse $ match "Word" lexemes
-    | lookahead == "Op" = parse $ match "Op" lexemes
-    | lookahead == "eTag" = lexemes
-    | lookahead == "Lit" = parse $ match "Lit" lexemes
-    | otherwise = error("Missing Lexeme or invalid token")
-    where
-        lookahead = head lexemes
+stmt :: MS.Parser Stmt
+stmt = tagStmt "html" HTMLTag 
+    <|> tagStmt "head" HeadTag 
+    <|> tagStmt "body" BodyTag
+    <|> tagStmt "p" ParaTag
+    <|> tagStmt "pre" PreTag
+    <|> tagStmt "em" EmphasisTag
+    <|> tagStmt "strong" StrongTag
+    <|> tagStmt "b" BoldTag
+    <|> tagStmt "i" ItalicsTag
+    <|> contentStmt
 
--- Production rule: tag -> sTag Lexemes eTag
--- This rule simulates a syntax tree where a node has two child nodes (an sTag and an eTag)
--- or three child nodes (an sTag, another nonterminal node, and an eTag)
-tag lexemes = match "eTag" (parse (match "sTag" lexemes))
+tagStmt :: String -> (Stmt -> Stmt) -> MS.Parser Stmt
+tagStmt htmlNode tagName = do
+    M.string $ concat ["<", htmlNode, ">"]
+    stmtContent <- stmt
+    M.string $ concat ["</", htmlNode, ">"]
+    return $ tagName (stmtContent)
 
--- If a match is successful "execute" the terminal by moving on to the next lexeme
-match :: String -> Lexemes -> Lexemes
-match lookahead [] = error("Syntax Error... Possibily missing tag")
-match lookahead (l:ls)
-    | lookahead == l = ls
-    | otherwise = error("Syntax Error... Mismatch: (1) "++ lookahead ++ " (2) " ++ l)
+contentStmt :: MS.Parser Stmt
+contentStmt = some 
+    (MC.alphaNumChar 
+    <|> MC.spaceChar
+    <|> MC.newline
+    <|> MC.punctuationChar
+    <|> MC.symbolChar
+    )
+    <|> MC.eol
+    <|> MC.string "" >>= (\x -> return $ Text x)
+
+runParse :: Show a => MS.Parser a -> Input -> Either (M.ParseError (M.Token String) M.Dec) a
+runParse p s = M.parse p "" s
+
+parse input = runParse stmt input
+

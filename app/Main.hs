@@ -4,7 +4,6 @@ import System.IO
 import System.Environment
 import Data.List.Split
 -- Frontend
-import LexicalAnalyzer
 import Parser
 -- Backend
 import CodeGenerator
@@ -15,7 +14,7 @@ main = do
     fileContents <- readFile x
     putStrLn $ "Compiling " ++ x
     let inputStream = splitOn "" fileContents
-    let html = lexicalParse fileContents
+    let html = parse fileContents
     case html of
       Right t -> do
           putStrLn "Syntax: well-formed"

@@ -1,6 +1,6 @@
 module CodeGenerator where
 
-import LexicalAnalyzer
+import Parser
 
 generateLaTeX :: Stmt -> String
 generateLaTeX (HTMLTag stmt) = generateLaTeX stmt

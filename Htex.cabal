@@ -15,8 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      Frontend
-  exposed-modules:     LexicalAnalyzer
-                     , Parser
+  exposed-modules:     Parser
   build-depends:       base >= 4.7 && < 5
                      , regex-posix
                      , megaparsec
@@ -25,7 +24,6 @@ library
   hs-source-dirs:      Backend
   exposed-modules:     CodeGenerator
   build-depends:       base >= 4.7 && < 5
-  default-language:    Haskell2010
 
 executable htex
   hs-source-dirs:      app
